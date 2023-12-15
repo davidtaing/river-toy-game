@@ -1,3 +1,16 @@
+/**
+ * Terminology:
+ * - Alpha: The frequency that P2 must call for your 0% equity bluffs to break even (as P1). If P2 calls less than alpha, P1's bluffs will be profitable.
+ * - Minimum Defense Frequency (MDF): The frequency that P2 must call to prevent P1 from profiting by bluffing.
+ * - Expected Value (EV): The average amount of money won or lost per hand. 
+ *   Calculated by multiplying the probability of all events by the expected outcome
+ * - Probability (P): Frequency of an event occurring
+ * - Bet (BET): The action of betting a certain amount of money by P1. Can be used to refer to the amount or the action.
+ * - Bet Size: The amount of money bet by P1. Note: The money in the pot is considered dead and is not included in the bet size.
+ * - Call (CALL): The action of matching a bet by P2.
+ * - Fold (FOLD): The action of forfeiting the hand by P2.
+ * - Check (CHECK): The action of not betting by P1.
+ */
 import { atom } from "jotai";
 
 const potSizeAtom = atom(100);
@@ -21,19 +34,7 @@ const potOddsAtom = atom((get) => {
   return betSize / (betSize * 2 + potSize);
 });
 
-/**
- * Expected Values
- * 
- * Terminology:
- * - Expected Value (EV): The average amount of money won or lost per hand. 
- *   Calculated by multiplying the probability of all events by the expected outcome
- * - Probability (P): Frequency of an event occurring
- * - Bet (BET): The action of betting a certain amount of money by P1. Can be used to refer to the amount or the action.
- * - Call (CALL): The action of matching a bet by P2.
- * - Fold (FOLD): The action of forfeiting the hand by P2.
- * - Check (CHECK): The action of not betting by P1.
- */
-
+// Expected Values
 const P1EV_P1_BET_AA_P2_CALL_ATOM = atom(0);
 const P1EV_P1_BET_AA_P2_FOLD_ATOM = atom(0);
 const P1EV_P1_AA_ATOM = atom(0);
