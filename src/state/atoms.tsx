@@ -2,7 +2,7 @@
  * Terminology:
  * - Alpha: The frequency that P2 must call for your 0% equity bluffs to break even (as P1). If P2 calls less than alpha, P1's bluffs will be profitable.
  * - Minimum Defense Frequency (MDF): The frequency that P2 must call to prevent P1 from profiting by bluffing.
- * - Expected Value (EV): The average amount of money won or lost per hand. 
+ * - Expected Value (EV): The average amount of money won or lost per hand.
  *   Calculated by multiplying the probability of all events by the expected outcome
  * - Probability (P): Frequency of an event occurring
  * - Bet (BET): The action of betting a certain amount of money by P1. Can be used to refer to the amount or the action.
@@ -17,15 +17,29 @@ const potSizeAtom = atom(100);
 const betSizeAtom = atom(100);
 const bluffFreqAtom = atom(0.5);
 const p2CallFreq = atom(0.5);
-const p2FoldFreq = atom(get => 1 - get(p2CallFreq));
+const p2FoldFreq = atom((get) => 1 - get(p2CallFreq));
 
-export const calculateAlpha = (potSize: number, betSize: number) => betSize / (betSize + potSize);
+export const calculateAlpha = (potSize: number, betSize: number) =>
+  betSize / (betSize + potSize);
 
-const alphaAtom = atom((get) => 
+const alphaAtom = atom((get) =>
   calculateAlpha(get(potSizeAtom), get(betSizeAtom))
 );
 
-const minimumDefenseFrequencyAtom = atom((get) => 1 - get(alphaAtom));
+export const calculateMDF = (potSize: number, betSize: number) =>
+  1 - calculateAlpha(potSize, betSize);
+
+/**
+ * Minimum Defense Frequency (MDF):
+ *
+ * The frequency that P2 must call to prevent P1 from profiting by bluffing.
+ *
+ * Calculated as 1 - Alpha
+ *
+ * If P2 defends more than the MDF (a.k.a Under Folding), P1 can exploit this / profit by bluffing less.
+ * And if P2 defends less than the MDF (a.k.a Over Folding), P1 can exploit this / profit by bluffing more.
+ */
+const mdfAtom = atom((get) => calculateMDF(get(potSizeAtom), get(betSizeAtom)));
 
 const potOddsAtom = atom((get) => {
   const potSize = get(potSizeAtom);
