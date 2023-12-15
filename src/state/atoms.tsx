@@ -19,7 +19,7 @@ const bluffFreqAtom = atom(0.5);
 const p2CallFreq = atom(0.5);
 const p2FoldFreq = atom(get => 1 - get(p2CallFreq));
 
-const calculateAlpha = (potSize: number, betSize: number) => betSize / (betSize + potSize);
+export const calculateAlpha = (potSize: number, betSize: number) => betSize / (betSize + potSize);
 
 const alphaAtom = atom((get) => 
   calculateAlpha(get(potSizeAtom), get(betSizeAtom))
