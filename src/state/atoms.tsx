@@ -73,6 +73,7 @@ const P1EV_P1_BET_AA_P2_CALL_ATOM = atom((get) => {
     probabilityOfP2Call: get(p2CallFreq),
   });
 });
+
 const P1EV_P1_BET_AA_P2_FOLD_ATOM = atom(0);
 const P1EV_P1_AA_ATOM = atom(0);
 const P1EV_P1_BET_QQ_P2_CALL_ATOM = atom(0);

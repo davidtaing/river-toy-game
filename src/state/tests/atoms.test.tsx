@@ -1,25 +1,65 @@
-import { calculateAlpha, calculateMDF } from "../atoms";
+import {
+  calculateAlpha,
+  calculateMDF,
+  calculateP1EV_P1_BET_AA_P2_CALL,
+} from "../atoms";
 
-describe("calculateAlpha / alphaAtom", () => {
+const BET_TYPES = {
+  HALF_POT: "half-size pot bet",
+  FULL_POT: "full-size pot bet",
+  OVERBET_2X: "2x overbet",
+} as const;
+
+describe("should calculate Alpha", () => {
   test.each([
-    { potSize: 100, betSize: 50, expectedAlpha: 1 / 3 },
-    { potSize: 100, betSize: 100, expectedAlpha: 1 / 2 },
-    { potSize: 100, betSize: 200, expectedAlpha: 2 / 3 },
+    {
+      desc: BET_TYPES.HALF_POT,
+      potSize: 100,
+      betSize: 50,
+      expectedAlpha: 1 / 3,
+    },
+    {
+      desc: BET_TYPES.FULL_POT,
+      potSize: 100,
+      betSize: 100,
+      expectedAlpha: 1 / 2,
+    },
+    {
+      desc: BET_TYPES.OVERBET_2X,
+      potSize: 100,
+      betSize: 200,
+      expectedAlpha: 2 / 3,
+    },
   ])(
-    "should calculate alpha for potSize: $potSize and betSize: $betSize",
+    "for potSize: $potSize & betSize: $betSize",
     ({ potSize, betSize, expectedAlpha }) => {
       expect(calculateAlpha(potSize, betSize)).toBe(expectedAlpha);
     }
   );
 });
 
-describe("calculateMDF / mdfAtom", () => {
+describe("should calculate Minimun Defence Frequencies", () => {
   test.each([
-    { potSize: 100, betSize: 50, expectedAlpha: 1 - 1 / 3 },
-    { potSize: 100, betSize: 100, expectedAlpha: 1 - 1 / 2 },
-    { potSize: 100, betSize: 200, expectedAlpha: 1 - 2 / 3 },
+    {
+      desc: BET_TYPES.HALF_POT,
+      potSize: 100,
+      betSize: 50,
+      expectedAlpha: 1 - 1 / 3,
+    },
+    {
+      desc: BET_TYPES.FULL_POT,
+      potSize: 100,
+      betSize: 100,
+      expectedAlpha: 1 - 1 / 2,
+    },
+    {
+      desc: BET_TYPES.OVERBET_2X,
+      potSize: 100,
+      betSize: 200,
+      expectedAlpha: 1 - 2 / 3,
+    },
   ])(
-    "should calculate MDF for potSize: $potSize and betSize: $betSize",
+    "for potSize: $potSize & betSize: $betSize",
     ({ potSize, betSize, expectedAlpha }) => {
       expect(calculateMDF(potSize, betSize)).toBe(expectedAlpha);
     }
