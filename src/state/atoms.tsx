@@ -48,8 +48,31 @@ const potOddsAtom = atom((get) => {
   return betSize / (betSize * 2 + potSize);
 });
 
+// Probabilites
+const pAAAtom = atom(0.5); // Probability of P1 having AA
+const pQQAtom = atom(0.5); // Probability of P1 having QQ
+
 // Expected Values
-const P1EV_P1_BET_AA_P2_CALL_ATOM = atom(0);
+export const calculateP1EV_P1_BET_AA_P2_CALL = ({
+  potSize,
+  betSize,
+  probabilityOfP2Call,
+}: {
+  potSize: number;
+  betSize: number;
+  probabilityOfP2Call: number;
+}) => {
+  const winAmount = potSize + betSize;
+  return winAmount * probabilityOfP2Call;
+};
+
+const P1EV_P1_BET_AA_P2_CALL_ATOM = atom((get) => {
+  calculateP1EV_P1_BET_AA_P2_CALL({
+    potSize: get(potSizeAtom),
+    betSize: get(betSizeAtom),
+    probabilityOfP2Call: get(p2CallFreq),
+  });
+});
 const P1EV_P1_BET_AA_P2_FOLD_ATOM = atom(0);
 const P1EV_P1_AA_ATOM = atom(0);
 const P1EV_P1_BET_QQ_P2_CALL_ATOM = atom(0);
