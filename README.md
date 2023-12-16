@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# River Toy Game Calc
+
+## Background
+
+I recently had the chance to use jotai, a Reactive State Management Library for React at work.
+And I wanted to continue exploring the library with a side-project.
+
+This project will be building a Poker Toy Game Calculator based on one of my old Google Sheets.
+
+See: [River Toy Game Calc - Google Sheets](https://docs.google.com/spreadsheets/d/1OFHF0vtWhu2yt0ztiA60lyAS4bcsM2BD/edit?usp=sharing&ouid=116881968134693048130&rtpof=true&sd=true)
+
+## Tech
+
+- Next.js - just grabbed something that I'm familiar with. Easy to deploy. And good enough to house the calculator which will be frontend only.
+- Jotai - reactive state management. When I think Reactive State, I think spreadsheets. So I think this will be a great fit because we'll be porting a spreadsheet.
+- Tailwind - came with the Next.js install, so we'll just roll with that.
+- GH Actions / Workflows: these will handle the CI steps of linting, testing and building
 
 ## Getting Started
 
-First, run the development server:
+### Installing Dependencies
+
+This project uses pnpm as it's package manager. If install pnpm if it has not been installed yet.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm i -g pnpm
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then to install the npm packages, run
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm i
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### npm scripts
 
-## Learn More
+```bash
+pnpm dev # runs dev server
+pnpm test # runs tests via vitest
+pnpm lint # runs linter
+pnpm build # builds project
+pnpm start # starts production server - requires the project to be built via previous script
+```
 
-To learn more about Next.js, take a look at the following resources:
+See the [package.json file](package.json) for the full list of npm scripts.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Deployment is handled by GitHub Actions Workflows instead of Vercel's default git integration. This allows us to avoid deploying when the codebase does not pass linting, testing or building.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+See the [Workflows Folder](.github/workflows/) for more information
