@@ -12,6 +12,7 @@
  * - Check (CHECK): The action of not betting by P1.
  */
 import { atom } from "jotai";
+import { calculateExpectedValue } from "./formulas";
 
 const potSizeAtom = atom(100);
 const betSizeAtom = atom(100);
@@ -63,7 +64,10 @@ export const calculateP1EV_P1_BET_AA_P2_CALL = ({
   probabilityOfP2Call: number;
 }) => {
   const winAmount = potSize + betSize;
-  return winAmount * probabilityOfP2Call;
+
+  return calculateExpectedValue([
+    { value: winAmount, probability: probabilityOfP2Call },
+  ]);
 };
 
 const P1EV_P1_BET_AA_P2_CALL_ATOM = atom((get) => {
