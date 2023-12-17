@@ -10,7 +10,7 @@ export const calculateExpectedValue = (outcomes: Outcome[]) =>
   );
 
 // EV of P1, P1 Bets AA, P2 Calls
-export const calculateP1EV_P1_BET_AA_P2_CALL = ({
+export const calculateP1EV_P1BetAA_P2Call = ({
   potSize,
   betSize,
   probabilityOfP2Call,
