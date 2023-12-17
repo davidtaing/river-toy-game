@@ -60,7 +60,7 @@ const P1EV_P1_BET_AA_P2_CALL_ATOM = atom((get) => {
   calculateP1EV_P1BetAA_P2Call({
     potSize: get(potSizeAtom),
     betSize: get(betSizeAtom),
-    probabilityOfP2Call: get(p2CallFreq),
+    pP2Call: get(p2CallFreq),
   });
 });
 

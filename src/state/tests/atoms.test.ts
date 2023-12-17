@@ -1,8 +1,5 @@
-import {
-  calculateAlpha,
-  calculateMDF,
-  calculateP1EV_P1_BET_AA_P2_CALL,
-} from "../atoms";
+import { calculateAlpha, calculateMDF } from "../atoms";
+import { calculateP1EV_P1BetAA_P2Call } from "../formulas";
 
 const BET_TYPES = {
   HALF_POT: "half-size pot bet",
@@ -69,7 +66,7 @@ describe("should calculate Minimun Defence Frequencies", () => {
 describe("should calculate Expected Values of P1 Betting Aces and P2 Calling a.k.a P1EV_P1_BET_AA_P2_CALL", () => {
   const testCases: Array<{
     desc?: string;
-    args: Parameters<typeof calculateP1EV_P1_BET_AA_P2_CALL>[number];
+    args: Parameters<typeof calculateP1EV_P1BetAA_P2Call>[number];
     expectedValue: number;
   }> = [
     {
@@ -77,7 +74,7 @@ describe("should calculate Expected Values of P1 Betting Aces and P2 Calling a.k
       args: {
         potSize: 100,
         betSize: 50,
-        probabilityOfP2Call: 2 / 3,
+        pP2Call: 2 / 3,
       },
       expectedValue: 100,
     },
@@ -86,7 +83,7 @@ describe("should calculate Expected Values of P1 Betting Aces and P2 Calling a.k
       args: {
         potSize: 100,
         betSize: 100,
-        probabilityOfP2Call: 0.5,
+        pP2Call: 0.5,
       },
       expectedValue: 100,
     },
@@ -95,7 +92,7 @@ describe("should calculate Expected Values of P1 Betting Aces and P2 Calling a.k
       args: {
         potSize: 100,
         betSize: 200,
-        probabilityOfP2Call: 1 / 3,
+        pP2Call: 1 / 3,
       },
       expectedValue: 100,
     },
@@ -103,8 +100,7 @@ describe("should calculate Expected Values of P1 Betting Aces and P2 Calling a.k
 
   test.each(testCases)(
     "for $desc and probality of P2 Call: $args.probabilityOfP2Call",
-    ({ args, expectedValue }) => {
-      expect(calculateP1EV_P1_BET_AA_P2_CALL(args)).toBe(expectedValue);
-    }
+    ({ args, expectedValue }) =>
+      expect(calculateP1EV_P1BetAA_P2Call(args)).toBe(expectedValue)
   );
 });
