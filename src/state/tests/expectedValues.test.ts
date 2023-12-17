@@ -1,6 +1,7 @@
 import {
   Outcome,
   calculateExpectedValue,
+  calculateP1EV_P1AA,
   calculateP1EV_P1BetAA_P2Fold,
 } from "../formulas";
 
@@ -91,6 +92,30 @@ describe("calculate expected value for P1, when P1 bets AA and P2 folds", () => 
 
   test.each(testCases)("%o", ({ potSize, pP2Fold, expectedValue }) => {
     const actual = calculateP1EV_P1BetAA_P2Fold({ potSize, pP2Fold });
+    expect(actual).toBe(expectedValue);
+  });
+});
+
+describe("calculate expected value for P1, when P1 has AA", () => {
+  const testCases: {
+    desc: string;
+    args: Parameters<typeof calculateP1EV_P1AA>[number];
+    expectedValue: number;
+  }[] = [
+    {
+      desc: "P2 calls 0%",
+      args: { outcomes: [150, 0], pP2Call: 0 } as const,
+      expectedValue: 0,
+    },
+    {
+      desc: "P2 calls 50%",
+      args: { outcomes: [150, 0], pP2Call: 0.5 } as const,
+      expectedValue: 75,
+    },
+  ];
+
+  test.each(testCases)("%o", ({ args, expectedValue }) => {
+    const actual = calculateP1EV_P1AA(args);
     expect(actual).toBe(expectedValue);
   });
 });
