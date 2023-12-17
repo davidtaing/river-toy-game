@@ -8,3 +8,20 @@ export const calculateExpectedValue = (outcomes: Outcome[]) =>
     (acc, { value, probability }) => acc + value * probability,
     0
   );
+
+// EV of P1, P1 Bets AA, P2 Calls
+export const calculateP1EV_P1_BET_AA_P2_CALL = ({
+  potSize,
+  betSize,
+  probabilityOfP2Call,
+}: {
+  potSize: number;
+  betSize: number;
+  probabilityOfP2Call: number;
+}) => {
+  const winAmount = potSize + betSize;
+
+  return calculateExpectedValue([
+    { value: winAmount, probability: probabilityOfP2Call },
+  ]);
+};
