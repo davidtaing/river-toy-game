@@ -49,10 +49,11 @@ export const calcP1EV = ({
 }) => {
   const frequencyOfHand = 1 / p1Range.length;
 
-  return (
+  const result =
     calcP1EV_AA({ potSize, betSize, callFreq }) * frequencyOfHand +
-    calcP1EV_QQ({ potSize, betSize, bluffFreq, callFreq }) * frequencyOfHand
-  );
+    calcP1EV_QQ({ potSize, betSize, bluffFreq, callFreq }) * frequencyOfHand;
+
+  return Number(result.toFixed(2));
 };
 
 // EVs of P1's Hands
@@ -79,10 +80,10 @@ export const calcP1EV_QQ = ({
   bluffFreq: number;
   callFreq: number;
 }) => {
-  return (
-    calcP1EV_QQ_Bet({ potSize, betSize, callFreq }) * bluffFreq +
-    calcP1EV_QQ_Check() * (1 - bluffFreq)
-  );
+  const evBet = calcP1EV_QQ_Bet({ potSize, betSize, callFreq });
+  const evCheck = calcP1EV_QQ_Check();
+
+  return evBet * bluffFreq + evCheck * (1 - bluffFreq);
 };
 
 // P1 Hand -> P1 Actions
@@ -110,10 +111,11 @@ export const calcP1EV_QQ_Bet = ({
   betSize: number;
   callFreq: number;
 }) => {
-  return (
-    calcP1EV_QQ_Bet_Call(betSize) * (1 - callFreq) +
-    calcP1EV_QQ_Bet_Fold(potSize) * callFreq
-  );
+  const evBetCall = calcP1EV_QQ_Bet_Call(betSize);
+  const evBetFold = calcP1EV_QQ_Bet_Fold(potSize);
+  const result = evBetCall * callFreq + evBetFold * (1 - callFreq);
+
+  return Number(result.toFixed(2));
 };
 
 export const calcP1EV_QQ_Check = OUTCOME_CALCULATIONS.P1_CHECK;
