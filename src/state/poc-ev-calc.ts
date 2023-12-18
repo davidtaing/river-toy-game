@@ -18,6 +18,15 @@ export const actions = { check: "X", bet: "B", fold: "F" } as const;
  *    - Get EV of QQ -> Check -> Bet -> Call / Fold (Ignoring this branch for now since P2 should never bet here)
  */
 
+const OUTCOME_CALCULATIONS = {
+  BLUFF_FOLD: (potSize: number) => potSize,
+  BLUFF_CALL: (betSize: number) => -betSize,
+  VALUEBET_CALL: (betSize: number, potSize: number) => betSize + potSize,
+  VALUEBET_FOLD: (potSize: number) => potSize,
+  CHECK: () => 0,
+  FOLD: () => 0,
+} as const;
+
 export const calcP1EV = ({
   potSize,
   betSize,
@@ -84,8 +93,8 @@ export const calcP1EV_AA_Bet = ({
   callFreq: number;
 }) => {
   return (
-    calcP1EV_AA_Bet_Call({ potSize, betSize }) * callFreq +
-    calcP1EV_AA_Bet_Fold({ potSize }) * (1 - callFreq)
+    calcP1EV_AA_Bet_Call(betSize, potSize) * callFreq +
+    calcP1EV_AA_Bet_Fold(potSize) * (1 - callFreq)
   );
 };
 
@@ -99,35 +108,15 @@ export const calcP1EV_QQ_Bet = ({
   callFreq: number;
 }) => {
   return (
-    calcP1EV_QQ_Bet_Call({ betSize }) * (1 - callFreq) +
-    calcP1EV_QQ_Bet_Fold({ potSize }) * callFreq
+    calcP1EV_QQ_Bet_Call(betSize) * (1 - callFreq) +
+    calcP1EV_QQ_Bet_Fold(potSize) * callFreq
   );
 };
 
-export const calcP1EV_QQ_Check = () => {
-  return 0;
-};
+export const calcP1EV_QQ_Check = OUTCOME_CALCULATIONS.CHECK;
 
 // P1 Actions -> P2 Responses (Actions)
-export const calcP1EV_AA_Bet_Call = ({
-  potSize,
-  betSize,
-}: {
-  potSize: number;
-  betSize: number;
-}) => {
-  const winAmount = potSize + betSize;
-  return winAmount;
-};
-
-export const calcP1EV_AA_Bet_Fold = ({ potSize }: { potSize: number }) => {
-  return potSize;
-};
-
-export const calcP1EV_QQ_Bet_Call = ({ betSize }: { betSize: number }) => {
-  return -betSize;
-};
-
-export const calcP1EV_QQ_Bet_Fold = ({ potSize }: { potSize: number }) => {
-  return potSize;
-};
+export const calcP1EV_AA_Bet_Call = OUTCOME_CALCULATIONS.VALUEBET_CALL;
+export const calcP1EV_AA_Bet_Fold = OUTCOME_CALCULATIONS.VALUEBET_FOLD;
+export const calcP1EV_QQ_Bet_Call = OUTCOME_CALCULATIONS.BLUFF_CALL;
+export const calcP1EV_QQ_Bet_Fold = OUTCOME_CALCULATIONS.BLUFF_FOLD;
