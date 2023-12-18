@@ -21,7 +21,7 @@ export const actions = { check: "X", bet: "B", fold: "F" } as const;
 export const calcP1EV = ({
   potSize,
   betSize,
-  betFreq,
+  bluffFreq,
   callFreq,
   p1Range = ["AA", "QQ"],
   p2Range = ["KK"],
@@ -29,7 +29,7 @@ export const calcP1EV = ({
 }: {
   potSize: number;
   betSize: number;
-  betFreq: number;
+  bluffFreq: number;
   callFreq: number;
   p1Range: string[];
   p2Range: string[];
