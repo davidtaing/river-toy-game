@@ -157,35 +157,55 @@ export const calcP2EV = ({
 }) => {
   const frequencyOfHand = 1 / p2Range.length;
   const frequencyOfP1Hand = 1 / p1Range.length;
-  return calcP2EV_KK({ frequencyOfP1Hand }) * frequencyOfHand;
-};
-
-export const calcP2EV_KK = ({
-  frequencyOfP1Hand,
-}: {
-  frequencyOfP1Hand: number;
-}) => {
   return (
-    calcP2EV_KK_vs_AA() * frequencyOfP1Hand +
-    calcP2EV_KK_vs_QQ() * frequencyOfP1Hand
+    calcP2EV_KK({ potSize, betSize, bluffFreq, callFreq, frequencyOfP1Hand }) *
+    frequencyOfHand
   );
 };
 
-export const calcP2EV_KK_vs_AA = () => {
-  const callFreq = 0.5;
-  const betSize = 100;
+export const calcP2EV_KK = ({
+  potSize,
+  betSize,
+  bluffFreq,
+  callFreq,
+  frequencyOfP1Hand,
+}: {
+  potSize: number;
+  betSize: number;
+  bluffFreq: number;
+  callFreq: number;
+  frequencyOfP1Hand: number;
+}) => {
+  return (
+    calcP2EV_KK_vs_AA({ betSize, callFreq }) * frequencyOfP1Hand +
+    calcP2EV_KK_vs_QQ({ potSize, betSize, bluffFreq, callFreq }) *
+      frequencyOfP1Hand
+  );
+};
 
+export const calcP2EV_KK_vs_AA = ({
+  betSize,
+  callFreq,
+}: {
+  betSize: number;
+  callFreq: number;
+}) => {
   return (
     calcP2EV_KK_Call_vs_AA_Bet(betSize) * callFreq +
     calcP2EV_KK_Fold_vs_AA_Bet() * (1 - callFreq)
   );
 };
-export const calcP2EV_KK_vs_QQ = () => {
-  const callFreq = 0.5;
-  const bluffFreq = 0.5;
-  const betSize = 100;
-  const potSize = 100;
-
+export const calcP2EV_KK_vs_QQ = ({
+  potSize,
+  betSize,
+  bluffFreq,
+  callFreq,
+}: {
+  potSize: number;
+  betSize: number;
+  bluffFreq: number;
+  callFreq: number;
+}) => {
   return (
     calcP2EV_KK_Call_vs_QQ_Bet(betSize, potSize) * callFreq * bluffFreq +
     calcP2EV_KK_Fold_vs_QQ_Bet() * (1 - callFreq) * bluffFreq +
