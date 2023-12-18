@@ -5,7 +5,7 @@ describe("Calculate P1's EV", () => {
     const actual = calcP1EV({
       potSize: 100,
       betSize: 100,
-      betFreq: 0.5,
+      bluffFreq: 0.5,
       callFreq: 0.5,
       p1Range: ["AA", "QQ"],
       p2Range: ["KK"],
