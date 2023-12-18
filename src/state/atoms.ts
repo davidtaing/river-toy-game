@@ -12,10 +12,7 @@
  * - Check (CHECK): The action of not betting by P1.
  */
 import { atom } from "jotai";
-import {
-  calculateExpectedValue,
-  calculateP1EV_P1BetAA_P2Call,
-} from "./formulas";
+import { calculateExpectedValue } from "./formulas";
 
 const potSizeAtom = atom(100);
 const betSizeAtom = atom(100);
@@ -51,28 +48,3 @@ const potOddsAtom = atom((get) => {
 
   return betSize / (betSize * 2 + potSize);
 });
-
-// Probabilites
-const pAAAtom = atom(0.5); // Probability of P1 having AA
-const pQQAtom = atom(0.5); // Probability of P1 having QQ
-
-const P1EV_P1_BET_AA_P2_CALL_ATOM = atom((get) => {
-  calculateP1EV_P1BetAA_P2Call({
-    potSize: get(potSizeAtom),
-    betSize: get(betSizeAtom),
-    pP2Call: get(p2CallFreq),
-  });
-});
-
-const P1EV_P1_BET_AA_P2_FOLD_ATOM = atom(0);
-const P1EV_P1_AA_ATOM = atom(0);
-const P1EV_P1_BET_QQ_P2_CALL_ATOM = atom(0);
-const P1EV_P1_BET_QQ_P2_FOLD_ATOM = atom(0);
-const P1EV_P1_QQ_ATOM = atom(0);
-const P1EV_ATOM = atom(0);
-
-const P2EV_P1_BET_AA_P2_CALL_ATOM = atom(0);
-const P2EV_P1_BET_AA_P2_FOLD_ATOM = atom(0);
-const P2EV_P1_BET_QQ_P2_CALL_ATOM = atom(0);
-const P2EV_P1_BET_QQ_P2_FOLD_ATOM = atom(0);
-const P2EV_ATOM = atom(0);
