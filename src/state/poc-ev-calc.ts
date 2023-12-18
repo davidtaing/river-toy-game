@@ -19,11 +19,14 @@ export const actions = { check: "X", bet: "B", fold: "F" } as const;
  */
 
 const OUTCOME_CALCULATIONS = {
-  BLUFF_FOLD: (potSize: number) => potSize,
-  BLUFF_CALL: (betSize: number) => -betSize,
-  VALUEBET_CALL: (betSize: number, potSize: number) => betSize + potSize,
-  VALUEBET_FOLD: (potSize: number) => potSize,
-  CHECK: () => 0,
+  P1_BLUFF_FOLD: (potSize: number) => potSize,
+  P1_BLUFF_CALL: (betSize: number) => -betSize,
+  P1_VALUEBET_CALL: (betSize: number, potSize: number) => betSize + potSize,
+  P1_VALUEBET_FOLD: (potSize: number) => potSize,
+  P1_CHECK: () => 0,
+  P2_CALL_BLUFF: (betSize: number, potSize: number) => betSize + potSize,
+  P2_CALL_VALUEBET: (betSize: number) => -betSize,
+  P2_CHECK: (potSize: number) => potSize,
   FOLD: () => 0,
 } as const;
 
@@ -113,10 +116,85 @@ export const calcP1EV_QQ_Bet = ({
   );
 };
 
-export const calcP1EV_QQ_Check = OUTCOME_CALCULATIONS.CHECK;
+export const calcP1EV_QQ_Check = OUTCOME_CALCULATIONS.P1_CHECK;
 
 // P1 Actions -> P2 Responses (Actions)
-export const calcP1EV_AA_Bet_Call = OUTCOME_CALCULATIONS.VALUEBET_CALL;
-export const calcP1EV_AA_Bet_Fold = OUTCOME_CALCULATIONS.VALUEBET_FOLD;
-export const calcP1EV_QQ_Bet_Call = OUTCOME_CALCULATIONS.BLUFF_CALL;
-export const calcP1EV_QQ_Bet_Fold = OUTCOME_CALCULATIONS.BLUFF_FOLD;
+export const calcP1EV_AA_Bet_Call = OUTCOME_CALCULATIONS.P1_VALUEBET_CALL;
+export const calcP1EV_AA_Bet_Fold = OUTCOME_CALCULATIONS.P1_VALUEBET_FOLD;
+export const calcP1EV_QQ_Bet_Call = OUTCOME_CALCULATIONS.P1_BLUFF_CALL;
+export const calcP1EV_QQ_Bet_Fold = OUTCOME_CALCULATIONS.P1_BLUFF_FOLD;
+
+/**
+ * Player 2's EV Calculations
+ *
+ * Naive Approach:
+ *
+ * 1. Get EV of P2 which consists of 1.1
+ *  1.1. Get EV of KK which consists of the sum of:
+ *    - Get EV of KK -> Calling Against AA
+ *    - Get EV of KK -> Folding Against AA = 0EV
+ *    - Get EV of KK -> Calling Against QQ
+ *    - Get EV of KK -> Folding Against QQ = 0EV
+ *    - Get EV of KK -> Checking Behind after P1 Checks
+ */
+
+export const calcP2EV = ({
+  potSize,
+  betSize,
+  bluffFreq,
+  callFreq,
+  p1Range = ["AA", "QQ"],
+  p2Range = ["KK"],
+  board = ["3c", "3s", "3d", "2d", "2h"],
+}: {
+  potSize: number;
+  betSize: number;
+  bluffFreq: number;
+  callFreq: number;
+  p1Range: string[];
+  p2Range: string[];
+  board: string[];
+}) => {
+  const frequencyOfHand = 1 / p2Range.length;
+  const frequencyOfP1Hand = 1 / p1Range.length;
+  return calcP2EV_KK({ frequencyOfP1Hand }) * frequencyOfHand;
+};
+
+export const calcP2EV_KK = ({
+  frequencyOfP1Hand,
+}: {
+  frequencyOfP1Hand: number;
+}) => {
+  return (
+    calcP2EV_KK_vs_AA() * frequencyOfP1Hand +
+    calcP2EV_KK_vs_QQ() * frequencyOfP1Hand
+  );
+};
+
+export const calcP2EV_KK_vs_AA = () => {
+  const callFreq = 0.5;
+  const betSize = 100;
+
+  return (
+    calcP2EV_KK_Call_vs_AA_Bet(betSize) * callFreq +
+    calcP2EV_KK_Fold_vs_AA_Bet() * (1 - callFreq)
+  );
+};
+export const calcP2EV_KK_vs_QQ = () => {
+  const callFreq = 0.5;
+  const bluffFreq = 0.5;
+  const betSize = 100;
+  const potSize = 100;
+
+  return (
+    calcP2EV_KK_Call_vs_QQ_Bet(betSize, potSize) * callFreq * bluffFreq +
+    calcP2EV_KK_Fold_vs_QQ_Bet() * (1 - callFreq) * bluffFreq +
+    calcP2EV_KK_Check_vs_QQ_Check(potSize) * (1 - bluffFreq)
+  );
+};
+
+export const calcP2EV_KK_Call_vs_AA_Bet = OUTCOME_CALCULATIONS.P2_CALL_VALUEBET;
+export const calcP2EV_KK_Fold_vs_AA_Bet = OUTCOME_CALCULATIONS.FOLD;
+export const calcP2EV_KK_Call_vs_QQ_Bet = OUTCOME_CALCULATIONS.P2_CALL_BLUFF;
+export const calcP2EV_KK_Fold_vs_QQ_Bet = OUTCOME_CALCULATIONS.FOLD;
+export const calcP2EV_KK_Check_vs_QQ_Check = OUTCOME_CALCULATIONS.P2_CHECK;
