@@ -53,7 +53,7 @@ export const calcP1EV_AA = ({
   betSize: number;
   callFreq: number;
 }) => {
-  return calcP1EV_AA_Bet();
+  return calcP1EV_AA_Bet({ potSize, betSize, callFreq });
 };
 
 export const calcP1EV_QQ = ({
@@ -67,21 +67,40 @@ export const calcP1EV_QQ = ({
   bluffFreq: number;
   callFreq: number;
 }) => {
-  return caclP1EV_QQ_Bet() * bluffFreq + calcP1EV_QQ_Check() * (1 - bluffFreq);
-};
-
-// P1 Hand -> P1 Actions
-export const calcP1EV_AA_Bet = () => {
-  const callFreq = 0.5;
   return (
-    calcP1EV_AA_Bet_Call() * callFreq + calcP1EV_AA_Bet_Fold() * (1 - callFreq)
+    caclP1EV_QQ_Bet({ potSize, betSize, callFreq }) * bluffFreq +
+    calcP1EV_QQ_Check() * (1 - bluffFreq)
   );
 };
 
-export const caclP1EV_QQ_Bet = () => {
-  const callFreq = 0.5;
+// P1 Hand -> P1 Actions
+export const calcP1EV_AA_Bet = ({
+  potSize,
+  betSize,
+  callFreq,
+}: {
+  potSize: number;
+  betSize: number;
+  callFreq: number;
+}) => {
   return (
-    calcP1EV_QQ_Bet_Call() * (1 - callFreq) + calcP1EV_QQ_Bet_Fold() * callFreq
+    calcP1EV_AA_Bet_Call({ potSize, betSize }) * callFreq +
+    calcP1EV_AA_Bet_Fold({ betSize }) * (1 - callFreq)
+  );
+};
+
+export const caclP1EV_QQ_Bet = ({
+  potSize,
+  betSize,
+  callFreq,
+}: {
+  potSize: number;
+  betSize: number;
+  callFreq: number;
+}) => {
+  return (
+    calcP1EV_QQ_Bet_Call({ betSize }) * (1 - callFreq) +
+    calcP1EV_QQ_Bet_Fold({ potSize }) * callFreq
   );
 };
 
@@ -90,25 +109,26 @@ export const calcP1EV_QQ_Check = () => {
 };
 
 // P1 Actions -> P2 Responses (Actions)
-export const calcP1EV_AA_Bet_Call = () => {
-  const potSize = 100;
-  const betSize = 100;
-
+export const calcP1EV_AA_Bet_Call = ({
+  potSize,
+  betSize,
+}: {
+  potSize: number;
+  betSize: number;
+}) => {
   const winAmount = potSize + betSize;
   return winAmount;
 };
 
-export const calcP1EV_AA_Bet_Fold = () => {
+export const calcP1EV_AA_Bet_Fold = ({ betSize }: { betSize: number }) => {
   const potSize = 100;
   return potSize;
 };
 
-export const calcP1EV_QQ_Bet_Call = () => {
-  const betSize = 100;
+export const calcP1EV_QQ_Bet_Call = ({ betSize }: { betSize: number }) => {
   return -betSize;
 };
 
-export const calcP1EV_QQ_Bet_Fold = () => {
-  const potSize = 100;
+export const calcP1EV_QQ_Bet_Fold = ({ potSize }: { potSize: number }) => {
   return potSize;
 };
