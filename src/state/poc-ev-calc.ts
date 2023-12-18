@@ -85,7 +85,7 @@ export const calcP1EV_AA_Bet = ({
 }) => {
   return (
     calcP1EV_AA_Bet_Call({ potSize, betSize }) * callFreq +
-    calcP1EV_AA_Bet_Fold({ betSize }) * (1 - callFreq)
+    calcP1EV_AA_Bet_Fold({ potSize }) * (1 - callFreq)
   );
 };
 
@@ -120,8 +120,7 @@ export const calcP1EV_AA_Bet_Call = ({
   return winAmount;
 };
 
-export const calcP1EV_AA_Bet_Fold = ({ betSize }: { betSize: number }) => {
-  const potSize = 100;
+export const calcP1EV_AA_Bet_Fold = ({ potSize }: { potSize: number }) => {
   return potSize;
 };
 
