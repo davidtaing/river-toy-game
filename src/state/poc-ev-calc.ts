@@ -157,10 +157,12 @@ export const calcP2EV = ({
 }) => {
   const frequencyOfHand = 1 / p2Range.length;
   const frequencyOfP1Hand = 1 / p1Range.length;
-  return (
+
+  const result =
     calcP2EV_KK({ potSize, betSize, bluffFreq, callFreq, frequencyOfP1Hand }) *
-    frequencyOfHand
-  );
+    frequencyOfHand;
+
+  return Number(result.toFixed(2));
 };
 
 export const calcP2EV_KK = ({
