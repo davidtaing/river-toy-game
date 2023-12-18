@@ -68,7 +68,7 @@ export const calcP1EV_QQ = ({
   callFreq: number;
 }) => {
   return (
-    caclP1EV_QQ_Bet({ potSize, betSize, callFreq }) * bluffFreq +
+    calcP1EV_QQ_Bet({ potSize, betSize, callFreq }) * bluffFreq +
     calcP1EV_QQ_Check() * (1 - bluffFreq)
   );
 };
@@ -89,7 +89,7 @@ export const calcP1EV_AA_Bet = ({
   );
 };
 
-export const caclP1EV_QQ_Bet = ({
+export const calcP1EV_QQ_Bet = ({
   potSize,
   betSize,
   callFreq,
