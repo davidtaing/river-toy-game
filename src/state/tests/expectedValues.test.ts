@@ -1,8 +1,9 @@
 import {
   Outcome,
+  calcP1EV,
+  calcP1EV_QQ,
+  calcP2EV,
   calculateExpectedValue,
-  calculateP1EV_P1AA,
-  calculateP1EV_P1BetAA_P2Fold,
 } from "../formulas";
 
 describe("calculate Expected Value", () => {
@@ -65,57 +66,125 @@ describe("calculate Expected Value", () => {
   });
 });
 
-describe("calculate expected value for P1, when P1 bets AA and P2 folds", () => {
-  const testCases: ({
-    desc: string;
-    expectedValue: number;
-  } & Parameters<typeof calculateP1EV_P1BetAA_P2Fold>[number])[] = [
-    {
-      desc: "P2 folds 0%",
+describe("Calculate P1's EV", () => {
+  it("returns EV of 75 for a standard toy-game", () => {
+    const actual = calcP1EV({
       potSize: 100,
-      pP2Fold: 0,
-      expectedValue: 0,
-    },
-    {
-      desc: "P2 folds 50%",
-      potSize: 100,
-      pP2Fold: 0.5,
-      expectedValue: 50,
-    },
-    {
-      desc: "P2 folds 100%",
-      potSize: 100,
-      pP2Fold: 1,
-      expectedValue: 100,
-    },
-  ];
+      betSize: 100,
+      bluffFreq: 0.5,
+      callFreq: 0.5,
+      p1Range: ["AA", "QQ"],
+      p2Range: ["KK"],
+      board: ["3c", "3s", "3d", "2d", "2h"],
+    });
+    const expected = 75;
+    expect(actual).toEqual(expected);
+  });
 
-  test.each(testCases)("%o", ({ potSize, pP2Fold, expectedValue }) => {
-    const actual = calculateP1EV_P1BetAA_P2Fold({ potSize, pP2Fold });
-    expect(actual).toBe(expectedValue);
+  it("returns EV of 83.33 for a 2x overbet toy-game", () => {
+    const actual = calcP1EV({
+      potSize: 100,
+      betSize: 200,
+      bluffFreq: 2 / 3,
+      callFreq: 1 / 3,
+      p1Range: ["AA", "QQ"],
+      p2Range: ["KK"],
+      board: ["3c", "3s", "3d", "2d", "2h"],
+    });
+    const expected = 83.33;
+    expect(actual).toEqual(expected);
+  });
+
+  it("returns EV of 87.5 for a 3x overbet toy-game", () => {
+    const actual = calcP1EV({
+      potSize: 100,
+      betSize: 300,
+      bluffFreq: 3 / 4,
+      callFreq: 1 / 4,
+      p1Range: ["AA", "QQ"],
+      p2Range: ["KK"],
+      board: ["3c", "3s", "3d", "2d", "2h"],
+    });
+    const expected = 87.5;
+    expect(actual).toEqual(expected);
   });
 });
 
-describe("calculate expected value for P1, when P1 has AA", () => {
-  const testCases: {
-    desc: string;
-    args: Parameters<typeof calculateP1EV_P1AA>[number];
-    expectedValue: number;
-  }[] = [
-    {
-      desc: "P2 calls 0%",
-      args: { outcomes: [150, 0], pP2Call: 0 } as const,
-      expectedValue: 0,
-    },
-    {
-      desc: "P2 calls 50%",
-      args: { outcomes: [150, 0], pP2Call: 0.5 } as const,
-      expectedValue: 75,
-    },
-  ];
+describe("Calculate P1's EV of holding QQ", () => {
+  test("EV is 0 for a standard toy-game", () => {
+    const actual = calcP1EV_QQ({
+      potSize: 100,
+      betSize: 100,
+      bluffFreq: 0.5,
+      callFreq: 0.5,
+    });
+    const expected = 0;
+    expect(actual).toEqual(expected);
+  });
 
-  test.each(testCases)("%o", ({ args, expectedValue }) => {
-    const actual = calculateP1EV_P1AA(args);
-    expect(actual).toBe(expectedValue);
+  test("EV is 0 for a 2x overbet toy-game", () => {
+    const actual = calcP1EV_QQ({
+      potSize: 100,
+      betSize: 200,
+      bluffFreq: 2 / 3,
+      callFreq: 1 / 3,
+    });
+    const expected = 0;
+    expect(actual).toEqual(expected);
+  });
+
+  test("EV is 0 for a 3x overbet toy-game", () => {
+    const actual = calcP1EV_QQ({
+      potSize: 100,
+      betSize: 300,
+      bluffFreq: 3 / 4,
+      callFreq: 1 / 4,
+    });
+    const expected = 0;
+    expect(actual).toEqual(expected);
+  });
+});
+
+describe("Calculate P2's EV", () => {
+  it("returns EV of 25 for a standard toy-game", () => {
+    const actual = calcP2EV({
+      potSize: 100,
+      betSize: 100,
+      bluffFreq: 0.5,
+      callFreq: 0.5,
+      p1Range: ["AA", "QQ"],
+      p2Range: ["KK"],
+      board: ["3c", "3s", "3d", "2d", "2h"],
+    });
+    const expected = 25;
+    expect(actual).toEqual(expected);
+  });
+
+  it("returns EV of 16.67 for a 2x overbet toy-game", () => {
+    const actual = calcP2EV({
+      potSize: 100,
+      betSize: 200,
+      bluffFreq: 2 / 3,
+      callFreq: 1 / 3,
+      p1Range: ["AA", "QQ"],
+      p2Range: ["KK"],
+      board: ["3c", "3s", "3d", "2d", "2h"],
+    });
+    const expected = 16.67;
+    expect(actual).toEqual(expected);
+  });
+
+  it("returns EV of 12.50 for a 3x overbet toy-game", () => {
+    const actual = calcP2EV({
+      potSize: 100,
+      betSize: 300,
+      bluffFreq: 3 / 4,
+      callFreq: 1 / 4,
+      p1Range: ["AA", "QQ"],
+      p2Range: ["KK"],
+      board: ["3c", "3s", "3d", "2d", "2h"],
+    });
+    const expected = 12.5;
+    expect(actual).toEqual(expected);
   });
 });
