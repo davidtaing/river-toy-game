@@ -9,6 +9,8 @@ This project will be building a Poker Toy Game Calculator based on one of my old
 
 See: [River Toy Game Calc - Google Sheets](https://docs.google.com/spreadsheets/d/1OFHF0vtWhu2yt0ztiA60lyAS4bcsM2BD/edit?usp=sharing&ouid=116881968134693048130&rtpof=true&sd=true)
 
+Edit: There's a good chance that I will have to work in a tree-like data structure, which may be incompatible with Jotai. Definitely need to put more thought into it.
+
 ## Tech
 
 - Next.js - just grabbed something that I'm familiar with. Easy to deploy. And good enough to house the calculator which will be frontend only.
